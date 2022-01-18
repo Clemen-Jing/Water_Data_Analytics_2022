@@ -71,23 +71,54 @@ names(EnoDischarge)[4:5] <- c("Discharge_cfs", "Approval.Code")
 * Add a legend. (hint: Google "add legend two geom layers ggplot")
 
 ```{r}  
+# ?mutate
+# ?rollmean
+require(MASS)
+require(scales)
+
+EnoDischarge2 <- EnoDischarge %>%
+ select(site_no, Date, Approval.Code, agency_cd, Discharge_cfs) %>%
+ mutate(
+  Discharge_m3s = Discharge_cfs/35.3147,
+  Discharge_RollMean = rollmean(Discharge_m3s, 30, fill = NA)
+)
+
 EnoPlot <- 
   ggplot(EnoDischarge, aes(x = Date, y = Discharge_cfs)) +
-         geom_line() +
-         xlab("Year")
+  geom_line() +
+  xlab("Year")+
+  ggtitle("Discharge of Eno River") +
+  theme(plot.title = element_text(hjust = 0.5))
 EnoPlot
+
+EnoPlot2 <-
+  ggplot(EnoDischarge2, aes(x = Date)) +
+  geom_line(aes(y = Discharge_m3s, color = "Daily")) +
+  geom_line(aes(y = Discharge_RollMean, color = "30-day")) +
+  scale_color_manual(values = c("Daily" = "darkgray", "30-day" = "darkgreen")) +
+  scale_y_log10(breaks = trans_breaks("log10", function(x) 10^x), 
+                labels = trans_format("log10", math_format(10^.x)), 
+                name = expression("Discharge (m"^3*"/s)")) +
+  theme_classic() +
+  theme(legend.position = c(.95, .95),
+        legend.justification = c("right", "top"),
+        legend.box.just = "right",
+    )+
+  ggtitle("30-Day Rollingmean Discharge of Eno River") +
+  theme(plot.title = element_text(hjust = 0.5))
+EnoPlot2
 
 ```
 
 5. In what ways was the second plot a more effective visualization than the first? 
 
-> ANSWER: 
+> ANSWER: The overall trend can be seen more visually, and the outliers have less impact on the observation.
 
 6. What portions of the coding were challenging for you?
 
-> ANSWER: 
+> ANSWER: Building the plot. Sometimes, there are things I want to show, but I don't know what function to achieve. Or I don't know what functions are available through R and ggplot yet, so I don't know how to create the plot I need.
 
 7. Interpret the graph you made. What are the things you notice about within- and across-year variability, as well as the differences between daily values and 30-day rolling mean?
 
-> ANSWER: 
+> ANSWER: There is a clear cyclical variation in Eno River's discharge on an annual basis. And from 2012 to 2021, Eno River's discharge had an overall-upward trend. Compared to daily values, the 30-day rolling mean is significantly smaller and the trend of change is more obvious.
 

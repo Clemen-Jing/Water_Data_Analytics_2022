@@ -43,12 +43,20 @@ install.packages("ggrepel")
 library(tidyverse)
 library(dataRetrieval)
 library(zoo)
+
+theme_get()
+theme_set(theme_classic())
 ```
 
 3. Upload discharge data for the Eno River at site 02096500 for the same dates as we studied in class (2012-01-01 through 2021-12-31). Obtain data for discharge. Rename the columns with informative titles, as we did in class. 
 
 ```{r}
+EnoDischarge <- readNWISdv(siteNumbers = "02096500",
+                     parameterCd = "00060", # discharge (ft3/s)
+                     startDate = "2012-01-01",
+                     endDate = "2021-12-31")
 
+names(EnoDischarge)[4:5] <- c("Discharge_cfs", "Approval.Code")
 ```
 
 
@@ -63,7 +71,11 @@ library(zoo)
 * Add a legend. (hint: Google "add legend two geom layers ggplot")
 
 ```{r}  
-
+EnoPlot <- 
+  ggplot(EnoDischarge, aes(x = Date, y = Discharge_cfs)) +
+         geom_line() +
+         xlab("Year")
+EnoPlot
 
 ```
 

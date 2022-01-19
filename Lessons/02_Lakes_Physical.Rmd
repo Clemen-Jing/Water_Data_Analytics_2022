@@ -16,6 +16,7 @@ editor_options:
 ## Opening Discussion
 
 What are the physical properties of lakes?
+temperature pH depth 
 
 ## Session Set Up
 ```{r, message = FALSE}
@@ -33,6 +34,7 @@ library(rLakeAnalyzer)
 
 # Load data
 NTLdata <- read.csv("./Data/Raw/NTL-LTER_Lake_ChemistryPhysics_Raw.csv")
+# here package
 
 # set ggplot theme
 theme_set(theme_classic())
@@ -52,13 +54,16 @@ Common steps/checks for data wrangling:
 # Is the date column perceived as a date by R?
 class(NTLdata$sampledate)
 NTLdata$sampledate <- as.Date(NTLdata$sampledate, format = "%m/%d/%y")
+# as.Date() is to change the data as a date. 
 class(NTLdata$sampledate)
 # What does this column look like now?
 
 # Remove rows that contain NAs in temperature column
 dim(NTLdata)
 NTLdata <- NTLdata %>%
+  # %>% is the pipe
   drop_na(temperature_C)
+# NTLdata <- drop_na(NTLdata, temperature_C)  has the same function
 dim(NTLdata)  
 
 # How many observations are there for each lake?
@@ -68,7 +73,7 @@ summary(as.factor(NTLdata$lakename))
 # Let's choose the two lakes with the most data
 NTLdata_PeterPaul <- NTLdata %>%
   filter(lakename %in% c("Paul Lake", "Peter Lake"))
-
+# %in% is "includes"
 # What is another way to use the filter command to get to the same result?
 NTLdata_PeterPaul <- NTLdata %>%
   filter(lakename == "Paul Lake" | lakename == "Peter Lake")
@@ -89,6 +94,8 @@ max(Peterdata$sampledate)
 unique(Pauldata$depth)
 unique(Peterdata$depth)
 # Why didn't we use the "summary" function here?
+summary(Peterdata$depth)
+
 
 # QA the one data point at 20 m depth. 
 Pauldata <- Pauldata %>%
@@ -105,12 +112,16 @@ Let's also try using the traditional limnological graph type, with depth on the 
 ggplot(Pauldata, aes(x = depth, y = temperature_C)) + 
   geom_point(alpha = 0.5) +
   labs(y = expression("Temperature "(degree*C)), x = "Depth (m)")
+#temperature decrease as the depth, and the tempratrue varies a lot in the surface. Maybe in winter the river would freeze.
 
 ggplot(Pauldata, aes(x = temperature_C, y = depth, color = daynum)) +
   geom_point(alpha = 0.5) +
   scale_y_reverse() +
   scale_color_viridis_c() +
   labs(x = expression("Temperature "(degree*C)), y = "Depth (m)", color = "DOY")
+#epilimnion hypolimnion 
+# in winter, the surface freezes, and the hypolimnion's temprature is still above 0. 4 degree is the temperature where water has the largest density.
+
 
 ```
 

@@ -1,6 +1,6 @@
 ---
 title: "Assignment 2: Physical Properties of Lakes"
-author: "Student Name"
+author: "Yikai Jing"
 output: pdf_document
 geometry: margin=2.54cm
 editor_options: 
@@ -31,7 +31,13 @@ Target due date: 2022-01-25
 5. Set your ggplot theme (can be theme_classic or something else)
 
 ```{r}
+# load packages
+library(tidyverse)
+library(lubridate)
+library(rLakeAnalyzer)
 
+# Load data
+NTLdata <- read.csv("./Data/Raw/NTL-LTER_Lake_ChemistryPhysics_Raw.csv")
 
 ```
 

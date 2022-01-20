@@ -123,6 +123,8 @@ ggplot(Pauldata, aes(x = temperature_C, y = depth, color = daynum)) +
 # in winter, the surface freezes, and the hypolimnion's temprature is still above 0. 4 degree is the temperature where water has the largest density.
 
 
+
+
 ```
 
 How do temperatures at the surface compare to temperatures at the mid-depths and at the bottom?

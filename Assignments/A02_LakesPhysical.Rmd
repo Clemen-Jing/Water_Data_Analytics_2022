@@ -31,6 +31,9 @@ Target due date: 2022-01-25
 5. Set your ggplot theme (can be theme_classic or something else)
 
 ```{r}
+#Verify your working directory
+getwd()
+
 # load packages
 library(tidyverse)
 library(lubridate)
@@ -38,7 +41,17 @@ library(rLakeAnalyzer)
 
 # Load data
 NTLdata <- read.csv("./Data/Raw/NTL-LTER_Lake_ChemistryPhysics_Raw.csv")
+#set the date column to the date format
+NTLdata$sampledate <- as.Date(NTLdata$sampledate, format = "%m/%d/%y")
+#add a column called Month
+NTLdata <- NTLdata %>%
+  mutate(Month = month(sampledate))
+#Remove temperature NAs
+NTLdata <- NTLdata %>%
+  drop_na(temperature_C)
 
+# set ggplot theme
+theme_set(theme_classic())
 ```
 
 ## Creating and analyzing lake temperature profiles
@@ -48,8 +61,33 @@ NTLdata <- read.csv("./Data/Raw/NTL-LTER_Lake_ChemistryPhysics_Raw.csv")
 What seasonal trends do you observe, and do these manifest differently in each lake?
 
 ```{r}
+NTLdata1993 <- NTLdata %>%
+  filter(year4 == "1993")
 
+TempPlot <-
+ggplot(NTLdata1993, aes(x = temperature_C, y = depth, color = daynum)) +
+  geom_point(alpha = 0.5) +
+  scale_y_reverse() +
+  scale_color_viridis_c() +
+  labs(x = expression("Temperature "(degree*C)), y = "Depth (m)", color = "DOY")+
+  facet_wrap(vars(lakename))+
+  ggtitle("Temperature of Lakes in 1993") +
+  theme(plot.title = element_text(hjust = 0.5))
+TempPlot
 
+DOPlot <-
+ggplot(NTLdata1993, aes(x = dissolvedOxygen, y = depth, color = daynum)) +
+  geom_point(alpha = 0.5) +
+  scale_y_reverse() +
+  scale_color_viridis_c() +
+  labs(x = "Dissolved Oxygen (mg/L)", y = "Depth (m)", color = "DOY")+
+  facet_wrap(vars(lakename))+
+  ggtitle("Dissolved Oxygen of Lakes in 1993") +
+  theme(plot.title = element_text(hjust = 0.5))
+DOPlot
+
+#From May to September, the temperature rises slowly. And from October to November, the temperature drops rapidly. Except Central Long Lake and TUesday Lake, all the 4 lakes heve the frozen period in December.
+#From May to September, DO decreases slowly. And from October to November, DO increased rapidly.
 ```
 
 6. Create a new dataset that calculates thermocline depths for all lakes on all dates (hint: you will need group by lake, year, month, DOY, and sample date).
@@ -59,6 +97,7 @@ What seasonal trends do you observe, and do these manifest differently in each l
 Do all the lakes have a similar seasonal progression of thermocline deepening? Which lakes have the deepest thermoclines, and how does this relate to their maximum depth? 
 
 ```{r}
+
 
 ```
 

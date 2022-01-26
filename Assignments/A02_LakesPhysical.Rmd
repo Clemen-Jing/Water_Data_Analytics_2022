@@ -38,6 +38,8 @@ getwd()
 library(tidyverse)
 library(lubridate)
 library(rLakeAnalyzer)
+library(dataRetrieval)
+library(cowplot)
 
 # Load data
 NTLdata <- read.csv("./Data/Raw/NTL-LTER_Lake_ChemistryPhysics_Raw.csv")
@@ -108,19 +110,36 @@ NTLdata_thermo <- NTLdata %>%
 group_by(lakename, daynum, Month, year4, sampledate) %>%
 summarise(thermocline = thermo.depth(wtr = temperature_C, depths = depth, seasonal = FALSE)) %>%
 filter(thermocline > 1)
+?thermo.depth
 
-ggplot(NTLdata_thermo, aes(x = daynum, y = thermocline, color = lakename)) +
+thermoclineplot <-
+  ggplot(NTLdata_thermo, aes(x = daynum, y = thermocline, color = lakename)) +
   geom_point(alpha = 0.5) + #alpha = 0.5 : make the points 50% transparent
   scale_color_viridis_d()+
   labs(x = "DOY", y = "Thermocline depth (m)", color = "Lake")
+thermoclineplot
 #?scale_color_viridis_d()
 
-ggplot(NTLdata_thermo, aes(y = thermocline, x = lakename, fill = as.factor(Month))) +
+thermoclineplot2 <-
+  ggplot(NTLdata_thermo, aes(y = thermocline, x = lakename, fill = as.factor(Month))) +
   geom_boxplot() +
   scale_fill_viridis_d() +
   labs(x = "Lake", y = "Thermocline depth (m)", fill = "Month") +
   theme(legend.position = "top")
+thermoclineplot2
 
+depthplot <-
+  ggplot(NTLdata, aes(y = depth, x = lakename, fill = as.factor(Month))) +
+  geom_boxplot() +
+  scale_fill_viridis_d() +
+  labs(x = "Lake", y = "Depth (m)", fill = "Month") +
+  theme(legend.position = "top")
+depthplot
+
+CombinedPlot <- 
+  plot_grid(thermoclineplot2, depthplot,
+            ncol = 1)
+CombinedPlot
 #Yes, their thermocline deepening all increase with time.
 #Peter Lake has the deepest thermoclines, this as positively correlated with their maximum depth.
 ```

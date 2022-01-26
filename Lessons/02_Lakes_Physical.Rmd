@@ -149,8 +149,19 @@ ggplot(subset(Pauldata, year4 == 1993),
   labs(x = expression("Temperature "(degree*C)), y = "Depth (m)", color = "DOY") 
 
 # Now, make a plot as above but with dissolved oxygen saturation instead of temperature.
+# dimiotic "s, |, reversed s, |" where "|" means the water mix well, as it may freeze, "s" or "reversed s" means that the water stratify into layers with different temperature. 
+# monomiotic "|, |, reversed s, |"
+# polymiotic they are too shallow to develop thermal stratification; thus, their waters can mix from top to bottom throughout the ice-free period. 
+# amiotic: perennially sealed off by ice, from most of the annual seasonal variations in temperature.
 
-
+ggplot(subset(Pauldata, year4 == 1993), 
+       aes(x = dissolvedOxygen, y = depth, color = daynum)) +
+  geom_point(alpha = 0.5) +
+  scale_y_reverse() +
+  scale_color_viridis_c() +
+  labs(x = "Dissolved Oxygen (mg/L)", y = "Depth (m)", color = "DOY") 
+# epilinion has higher dendity of DO as atmopsphere, algea, plants, 
+# at the layer with highest density of DO, there are the most nutrients and the plants here can also access to the sunset, so they florish here. 
 ```
 
 Why does mixing occur in the spring and fall? What are the mechanisms that make this possible?
@@ -164,13 +175,14 @@ Why does mixing occur in the spring and fall? What are the mechanisms that make 
 
 ```{r}
 Pauldata_thermo <- Pauldata %>%
-  group_by(year4, daynum, sampledate) %>%
+  group_by(year4, daynum, sampledate) %>% 
   # calculate thermoclines based on temperature profiles. 
   # seasonal = FALSE calculates the thermocline as the maximum density gradient
   # seasonal = TRUE calculates the thermocline as the deepest density gradient
   summarise(thermocline = thermo.depth(wtr = temperature_C, depths = depth, seasonal = FALSE)) %>%
   # remove all thermoclines within 1 m of the surface. these can represent transient stratification.
   filter(thermocline > 1)
+
 
 ggplot(Pauldata_thermo, aes(x = daynum, y = thermocline)) +
   geom_point() 

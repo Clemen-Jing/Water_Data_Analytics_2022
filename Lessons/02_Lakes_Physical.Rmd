@@ -149,10 +149,10 @@ ggplot(subset(Pauldata, year4 == 1993),
   labs(x = expression("Temperature "(degree*C)), y = "Depth (m)", color = "DOY") 
 
 # Now, make a plot as above but with dissolved oxygen saturation instead of temperature.
-# dimiotic "s, |, reversed s, |" where "|" means the water mix well, as it may freeze, "s" or "reversed s" means that the water stratify into layers with different temperature. 
-# monomiotic "|, |, reversed s, |"
-# polymiotic they are too shallow to develop thermal stratification; thus, their waters can mix from top to bottom throughout the ice-free period. 
-# amiotic: perennially sealed off by ice, from most of the annual seasonal variations in temperature.
+# dimictic "s, |, reversed s, |" where "|" means the water mix well, as it may freeze, "s" or "reversed s" means that the water stratify into layers with different temperature. 
+# monomictic "|, |, reversed s, |"
+# polymictic they are too shallow to develop thermal stratification; thus, their waters can mix from top to bottom throughout the ice-free period. 
+# amictic: perennially sealed off by ice, from most of the annual seasonal variations in temperature.
 
 ggplot(subset(Pauldata, year4 == 1993), 
        aes(x = dissolvedOxygen, y = depth, color = daynum)) +
@@ -175,7 +175,7 @@ Why does mixing occur in the spring and fall? What are the mechanisms that make 
 
 ```{r}
 Pauldata_thermo <- Pauldata %>%
-  group_by(year4, daynum, sampledate) %>% 
+  group_by(year4, daynum, sampledate) %>%
   # calculate thermoclines based on temperature profiles. 
   # seasonal = FALSE calculates the thermocline as the maximum density gradient
   # seasonal = TRUE calculates the thermocline as the deepest density gradient

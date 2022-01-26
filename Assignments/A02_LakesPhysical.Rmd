@@ -61,6 +61,9 @@ theme_set(theme_classic())
 What seasonal trends do you observe, and do these manifest differently in each lake?
 
 ```{r}
+#?facet_wrap
+#?vars
+
 NTLdata1993 <- NTLdata %>%
   filter(year4 == "1993")
 
@@ -86,8 +89,12 @@ ggplot(NTLdata1993, aes(x = dissolvedOxygen, y = depth, color = daynum)) +
   theme(plot.title = element_text(hjust = 0.5))
 DOPlot
 
-#From May to September, the temperature rises slowly. And from October to November, the temperature drops rapidly. Except Central Long Lake and TUesday Lake, all the 4 lakes heve the frozen period in December.
-#From May to September, DO decreases slowly. And from October to November, DO increased rapidly.
+# From May to September, the temperature rises slowly. And from October to November, the temperature drops rapidly. Except Central Long Lake and TUesday Lake, all the 4 lakes heve the frozen period in December.
+# From May to September, DO decreases slowly. And from October to November, DO increased rapidly.
+# dimictic: East Long Lake, Peter Lake, West Long Lake
+# monomictic: Paul Lake, Tuesday Lake
+# polymictic: Central Long Lake
+# amictic: 
 ```
 
 6. Create a new dataset that calculates thermocline depths for all lakes on all dates (hint: you will need group by lake, year, month, DOY, and sample date).
@@ -97,7 +104,24 @@ DOPlot
 Do all the lakes have a similar seasonal progression of thermocline deepening? Which lakes have the deepest thermoclines, and how does this relate to their maximum depth? 
 
 ```{r}
+NTLdata_thermo <- NTLdata %>%
+group_by(lakename, daynum, Month, year4, sampledate) %>%
+summarise(thermocline = thermo.depth(wtr = temperature_C, depths = depth, seasonal = FALSE)) %>%
+filter(thermocline > 1)
 
+ggplot(NTLdata_thermo, aes(x = daynum, y = thermocline, color = lakename)) +
+  geom_point(alpha = 0.5) + #alpha = 0.5 : make the points 50% transparent
+  scale_color_viridis_d()+
+  labs(x = "DOY", y = "Thermocline depth (m)", color = "Lake")
+#?scale_color_viridis_d()
 
+ggplot(NTLdata_thermo, aes(y = thermocline, x = lakename, fill = as.factor(Month))) +
+  geom_boxplot() +
+  scale_fill_viridis_d() +
+  labs(x = "Lake", y = "Thermocline depth (m)", fill = "Month") +
+  theme(legend.position = "top")
+
+#Yes, their thermocline deepening all increase with time.
+#Peter Lake has the deepest thermoclines, this as positively correlated with their maximum depth.
 ```
 

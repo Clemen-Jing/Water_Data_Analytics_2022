@@ -69,9 +69,7 @@ ggplot(MysterySiteDischarge.Pattern, aes(x = DayOfYear)) +
 
 7. What seasonal patterns do you see? What does this tell you about precipitation patterns and climate in the watershed?
 
-> The highest flows occur in the winter. We don’t see a strong snowmelt pulse in the spring, so the
-climate is likely warm enough that snow is uncommon. This watershed likely experiences higher
-precipitation in the winter than in the summer.
+> The highest flows occur in the winter. We don’t see a strong snowmelt pulse in the spring, so the climate is likely warm enough that snow is uncommon. This watershed likely experiences higher precipitation in the winter than in the summer.
 
 ## Create and analyze recurrence intervals
 
@@ -111,11 +109,6 @@ summary(Mystery.RImodel.30yr)
 
 11. How did the recurrence interval plots and predictions of a 100-year flood differ among the two data frames? What does this tell you about the stationarity of discharge in this river?
 
-> The 30-year recurrence interval calculation results in a greater rise in discharge for each unit
-increase in recurrence interval than for the full calculation. A 100-year flood computed from a
-30-year record is predicted at a higher discharge (5516 cfs) than that predicted from the full record
-(4835 cfs). These numbers are in the same magnitude and differ only ~10 % from each other, so
-the system is not displaying strong trends over time. We might assume this system is displaying
-stationarity [another acceptable response would be that flooding is decreasing slightly overall].
+> The 30-year recurrence interval calculation results in a greater rise in discharge for each unit increase in recurrence interval than for the full calculation. A 100-year flood computed from a 30-year record is predicted at a higher discharge (5516 cfs) than that predicted from the full record (4835 cfs). These numbers are in the same magnitude and differ only ~10 % from each other, so the system is not displaying strong trends over time. We might assume this system is displaying stationarity.
 
 

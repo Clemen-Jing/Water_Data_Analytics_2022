@@ -69,6 +69,8 @@ ggplot(MysterySiteDischarge.Pattern, aes(x = DayOfYear)) +
 
 7. What seasonal patterns do you see? What does this tell you about precipitation patterns and climate in the watershed?
 
+> The high discharge occured in the winter. So the precipitation is concentrated in winters in the watershed area, meeaning that the watershed is probably located in the Mediterranean climate region.
+
 > The highest flows occur in the winter. We don’t see a strong snowmelt pulse in the spring, so the climate is likely warm enough that snow is uncommon. This watershed likely experiences higher precipitation in the winter than in the summer.
 
 ## Create and analyze recurrence intervals
@@ -105,10 +107,14 @@ ggplot(MysterySite.Annual.30yr, aes(x = RecurrenceInterval, y = PeakDischarge)) 
 
 Mystery.RImodel.30yr<- lm(data = MysterySite.Annual.30yr, PeakDischarge ~ log10(RecurrenceInterval))
 summary(Mystery.RImodel.30yr)
+Mystery.RImodel.Full <- lm(data = MysterySite.Annual.Full, PeakDischarge ~ log10(RecurrenceInterval))
+summary(Mystery.RImodel.Full)
+Mystery.RImodel.30yr$coefficients[1] + Mystery.RImodel.30yr$coefficients[2]*log10(100)
+Mystery.RImodel.Full$coefficients[1] + Mystery.RImodel.Full$coefficients[2]*log10(100)
 ```
 
 11. How did the recurrence interval plots and predictions of a 100-year flood differ among the two data frames? What does this tell you about the stationarity of discharge in this river?
 
-> The 30-year recurrence interval calculation results in a greater rise in discharge for each unit increase in recurrence interval than for the full calculation. A 100-year flood computed from a 30-year record is predicted at a higher discharge (5516 cfs) than that predicted from the full record (4835 cfs). These numbers are in the same magnitude and differ only ~10 % from each other, so the system is not displaying strong trends over time. We might assume this system is displaying stationarity.
+> The 30-year recurrence interval calculation results in a greater rise in discharge for each unit increase in recurrence interval than for the full calculation. A 100-year flood computed from a 30-year record is predicted at a higher discharge (5516 cfs) than that predicted from the full record (4835 cfs). #This means that the precipitation after 1995 was less than before.# These numbers are in the same magnitude and differ only ~10 % from each other, so the system is not displaying strong trends over time. We might assume this system is displaying stationarity.
 
 

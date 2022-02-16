@@ -8,6 +8,12 @@ editor_options:
   chunk_output_type: console
 ---
 
+```{r}
+ggplot(cars, aes(x = speed))+
+  geom_line(aes(y = dist, color = LakeHuron)) +
+  scale_linetype(values = c("grey", "red"))
+```
+
 ## Lesson Objectives
 1. Navigate and explore the LAGOSNE database and R package
 2. Evaluate lake water quality using the trophic state index
@@ -15,6 +21,7 @@ editor_options:
 
 ## Opening Discussion
 What are the major water quality impairments experienced in lakes?  
+nutrients(N,P), sediments, heavy metal, bacteria, fungal
 
 ## Session Set Up
 
@@ -27,7 +34,8 @@ library(lubridate)
 library(LAGOSNE)
 
 theme_set(theme_classic())
-options(scipen = 100)
+options(scipen = 4)
+#how much you want to knit out. 
 
 lagosne_get(dest_folder = LAGOSNE:::lagos_path(), overwrite = TRUE)
 
@@ -71,7 +79,7 @@ For example, let's find out how many lakes are in each state. Note that LAGOSloc
 ```{r}
 # Join data frames
 LAGOSlocations <- left_join(LAGOSlocus, LAGOSstate, by = "state_zoneid")
-
+?left_join
 ggplot(LAGOSlocations, aes(x = state)) + 
   geom_bar(stat = "count")
 
@@ -97,10 +105,10 @@ $TSI(SD) = 10(6 - (ln SD/ln 2))$
 $TSI(TP) = 10(6 - (ln(48/TP)/ln 2))$
 
 TSI values correspond to the following trophic states: 
-**0-40**: Oligotrophic
-**40-50**: Mesotrophic
-**50-70**: Eutrophic
-**70-100**: Hypereutrophic
+**0-40**: Oligotrophic: low nutrients
+**40-50**: Mesotrophic: medium nutrients
+**50-70**: Eutrophic: rich nutrients
+**70-100**: Hypereutrophic: high nutrients
 
 ### Exploring the LAGOS nutrient data frame
 ```{r}
@@ -122,7 +130,7 @@ Let's look at observations of chl, secchi depth, and TP seasonally and over the 
 Add a line of code to facet the graphs by state.
 ```{r}
 ggplot(LAGOStrophic, aes(x = as.factor(samplemonth), y = chla)) +
-  geom_jitter(alpha = 0.2, size = 0.5) +
+  geom_jitter(alpha = 0.2, size = 0.5) + #tells the actual sample numbers in the data set
   geom_boxplot(outlier.shape = NA, color = "#1f968b", fill = NA) +
   scale_y_log10() +
   labs(x = "Month", y = expression("Chl a ("*mu*"g/L)"))

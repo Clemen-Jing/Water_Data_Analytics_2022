@@ -31,6 +31,7 @@ Target due date: 2022-03-01
 [Water Quality Portal Web Services Guide](https://www.waterqualitydata.us/webservices_documentation/)
 
 ```{r setup}
+setwd("/Users/me/Water_Data_Analytics_2022/Assignments")
 getwd()
 library(tidyverse)
 library(lubridate)
@@ -40,10 +41,11 @@ library(viridis)
 theme_set(theme_classic())
 options(scipen = 4)
 
+?readWQPdata
 NCdata <- readWQPdata(statecode = "North Carolina", 
                       siteType = "Lake, Reservoir, Impoundment", 
                       sampleMedia = c("Water", "water"), 
-                      CharacteristicName = c("Phosphorus", "Chlorophylla"))
+                      CharacteristicName = c("Phosphorus", "Chlorophyll a"))
 
 NCsites <- whatWQPsites(statecode = "North Carolina", 
                       siteType = "Lake, Reservoir, Impoundment")
@@ -80,26 +82,16 @@ ActivityConductingOrganizationText, MonitoringLocationIdentifier, Depth, ResultM
 
 5. Create a graph visualizing the chlorophyll-TP stressor-response relationship. Add a line of best fit for the linear regression, and adjust axis scales and labels as needed. 
 
-  
-```{r}
 
-# Look into what forms and units phosphorus and chlorophyll have. 
-# Note that chlorophyll is always suspended, so the form isn't crucial.
-# Note that Phosphorus is in dissolved and total forms. We are interested in total.
-# Note that chlorophyll is in ug/L and phosphorus is in mg/L. In this case, we will assume NAs are consistent with the commonly used unit.
-# Note that we have 227 "U" flags in the dataset. This means the concentration was below the detection limit. We will set those values to 1/2 detection limit.
+```{r}
 summary(as.factor(NCdata$ResultSampleFractionText[NCdata$CharacteristicName == "Chlorophyll a"]))
 summary(as.factor(NCdata$ResultSampleFractionText[NCdata$CharacteristicName == "Phosphorus"]))
 summary(as.factor(NCdata$ResultMeasure.MeasureUnitCode[NCdata$CharacteristicName == "Phosphorus"]))
 summary(as.factor(NCdata$ResultSampleFractionText[NCdata$CharacteristicName == "Phosphorus"]))
 summary(as.factor(NCdata$MeasureQualifierCode))
 
-# ResultMeasureValue should be numeric. Note that there are a few non-numeric entries in that column, so R will throw out a warning (you can ignore this warning).
 NCdata$ResultMeasureValue <- as.numeric(NCdata$ResultMeasureValue)
 
-# Depth is sometimes reported in feet and sometimes in meters. Make a new column with all depths in m.
-# Create a new variable column which notes the form and units of the nutrient.
-# Update the ResultMeasureValue column with 1/2 detection limit for U flag rows. Retain other samples as-is.
 NCdata_processed <- NCdata %>%
   mutate(Depth_m = case_when(ActivityDepthHeightMeasure.MeasureUnitCode %in% c("feet", "ft") ~
                              ActivityDepthHeightMeasure.MeasureValue * 0.3048,
@@ -116,6 +108,7 @@ NCdata_processed <- NCdata %>%
   drop_na(Variable, ResultMeasureValue, Depth_m)
   
 NCdata_processed$ActivityStartDate <- as.Date(NCdata_processed$ActivityStartDate, "%Y-%m-%d")
+
 NCdata_processed <- NCdata_processed %>%
   select(OrganizationIdentifier, OrganizationFormalName, ActivityStartDate,
          ActivityConductingOrganizationText, MonitoringLocationIdentifier,

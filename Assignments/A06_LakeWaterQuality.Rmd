@@ -117,9 +117,9 @@ NCdata_processed <- NCdata_processed %>%
            ActivityConductingOrganizationText, MonitoringLocationIdentifier,
            Depth_m, Variable) %>%
   summarise(ResultMeasureValue = mean(ResultMeasureValue, na.rm = TRUE)) %>%
+  pivot_wider(names_from = "Variable", values_from = "ResultMeasureValue") %>%
   mutate(Month = month(ActivityStartDate),
          Year = year(ActivityStartDate)) %>%
-  pivot_wider(names_from = "Variable", values_from = "ResultMeasureValue") %>%
   filter(Month %in% c(5:10)) %>%
   filter(Depth_m <= 1)
 

@@ -63,7 +63,7 @@ Parameters of interest:
 ```{r}
 NeuseParams <- whatNWISdata(siteNumbers = "02089500")
 
-NeuseWQ <- readWQPqw(siteNumbers = "USGS-02089500", # Neuse River at Kinston, NC
+NeuseWQ <- readWQPqw(siteNumbers = "USGS-02089500", # Neuse River at Kinston, NC, when download USGS data, you need to add "USGS-"
                      parameterCd = c("00915", # calcium, filtered mg/L
                                      "00925", # magnesium, filtered mg/L
                                      "00930", # sodium,filtered mg/L
@@ -71,7 +71,8 @@ NeuseWQ <- readWQPqw(siteNumbers = "USGS-02089500", # Neuse River at Kinston, NC
                                      "31625",  # Fecal coliform, CFU/100 mL
                                      "31673"),  # Fecal streptocci, CFU/100 mL
                      startDate = "1976-01-01",
-                     endDate = "")
+                     endDate = "") # endDate is not necessary
+#now the characters is a variety as the factor"CharacteristicName"
 
 unique(NeuseWQ$CharacteristicName)
 
@@ -91,9 +92,11 @@ NeuseWQ_processed <- NeuseWQ %>%
                               CharacteristicName == "Sodium" ~ "Sodium_mg.L")) %>%
   select(-CharacteristicName) %>%
   pivot_wider(names_from = "Variable", values_from = "ResultMeasureValue")
+#pivot_wider: put the variables from the characteristics in one column to the different columns since the pointed column.
+#pivot_loger: put the column in to one column.
 
 NeuseFlow_processed <- NeuseFlow %>%
-  select(ActivityStartDate = Date, Flow_cfs = X_00060_00003) %>%
+  select(ActivityStartDate = Date, Flow_cfs = X_00060_00003) %>% #new name = original name
   filter(ActivityStartDate >= min(NeuseWQ_processed$ActivityStartDate) & 
            ActivityStartDate <= max(NeuseWQ_processed$ActivityStartDate))
 
@@ -106,7 +109,7 @@ NeuseWQFlow_processed <- NeuseWQ_processed %>%
 NeuseWQFlow_long <- NeuseWQFlow_processed %>%
   pivot_longer(cols = c("FecalColiform_cfu.100mL", "FecalStrep_cfu.100mL", "SpC_uS.cm",
                         "Sodium_mg.L", "Magnesium_mg.L", "Calcium_mg.L", "Flow_cfs"),
-               names_to = "Variable", values_to = "Value") %>%
+               names_to = "Variable", values_to = "Value") %>% #column names and the values
   drop_na(Value)
 
 NeuseFlow_summary <- NeuseWQFlow_processed %>%
@@ -147,7 +150,7 @@ What is the relationship between flow and the water quality indicators?
 ggplot(NeuseFlow_summary, aes(x = DOY)) +
   geom_line(aes(y = median_Flow_cfs)) +
   geom_ribbon(aes(ymin = p25_Flow_cfs, ymax = p75_Flow_cfs), fill = "gray", alpha = 0.2) +
-  #geom_point(data = NeuseWQFlow_processed, aes(y = FecalColiform_cfu.100mL)) +
+  geom_point(data = NeuseWQFlow_processed, aes(y = FecalColiform_cfu.100mL)) +
   #geom_point(data = NeuseWQFlow_processed, aes(y = SpC_uS.cm)) +
   scale_y_log10() +
   labs(x = "Day of Year", y = "Flow (cfs)")
@@ -182,7 +185,15 @@ Exercise:
 3. How do fecal coliform and specific conductivity vary as a function of hydrologic condition?
 
 ```{r}
+NeuseWQFlow_long <- NeuseWQFlow_processed %>%
+  pivot_longer(cols = c("FecalColiform_cfu.100mL", "FecalStrep_cfu.100mL", "SpC_uS.cm",
+                        "Sodium_mg.L", "Magnesium_mg.L", "Calcium_mg.L", "Flow_cfs"),
+               names_to = "Variable", values_to = "Value") %>% #column names and the values
+  drop_na(Value)
 
+Neuse_hydrologic_sense<- NeuseWQFlow_long %>%
+  pivot_wider(names_from = "Variable", values_from = "Value")
 
+pivot_wider(names_from = "Variable", values_from = "ResultMeasureValue")
 ```
 

@@ -144,12 +144,13 @@ LAGOScovariates <- LAGOSjoined %>%
 
 # create a correlation matrix. Necessitates only complete cases.
 LAGOScorr <- cor(LAGOScovariates, use = "complete.obs")
+#make columns be also the rows. 
 
 # plot correlation matrix.
 corrplot(LAGOScorr)
 
 # customize.
 corrplot(LAGOScorr, type = "upper", diag = FALSE, tl.cex = 0.8, tl.col = "black")
-
+#"type" decides the half part, diag
 ```
 

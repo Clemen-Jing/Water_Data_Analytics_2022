@@ -222,7 +222,8 @@ ggplot(NeuseCond_monthly_Components) +
 #the values are always positive.
 
 # Visualize how the seasonal cycle maps onto the data
-ggplot(NeuseCond_monthly_Components) +
+ggplot(
+  NeuseCond_monthly_Components) +
   geom_line(aes(y = Observed, x = Date), color = "gray") +
   geom_line(aes(y = seasonal, x = Date), color = "#c13d75ff") +
   geom_hline(yintercept = 0, lty = 2) +

@@ -64,7 +64,7 @@ ggplot(NewHopeDO, aes(x = Date, y = DO_mgL)) +
 
 4. What do you notice about the frequency of hypoxia over time?
 
-> Hypoxia only occurred in the 1980s and remained high after that.
+> The high frequency events occurred around 1980.
 
 ## Nutrients
 
@@ -95,7 +95,7 @@ plot_grid(DOplot, TPplot, ncol = 1)
 
 7. What do these plots tell you about nutrient concentrations over time? How might nutrient concentrations relate to your previous plot of hypoxia events?
 
-> Higher nutrients when there is more hypoxia. Probably related.
+> Higher nutrients come with high hypoxia. They are positively correlated.
 
 ## Discharge and Dissolved Oxygen
 

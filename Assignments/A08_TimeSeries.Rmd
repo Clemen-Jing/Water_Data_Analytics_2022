@@ -92,7 +92,6 @@ Research question: Has there been a monotonic trend in discharge in Clear Creek 
 
 ```{r}
 ClearCreek_trend <- smk.test(ClearCreek_ts)
-# Inspect results
 ClearCreek_trend
 summary(ClearCreek_trend)
 ```

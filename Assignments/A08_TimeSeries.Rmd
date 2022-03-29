@@ -35,7 +35,6 @@ library(lubridate)
 library(trend)
 library(forecast)
 library(dataRetrieval)
-
 theme_set(theme_classic())
 ```
 

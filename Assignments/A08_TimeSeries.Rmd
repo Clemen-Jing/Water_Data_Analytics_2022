@@ -124,3 +124,4 @@ ts.plot(ClearCreek_ts, ClearCreekprediction$pred, lty = c(1, 3))
 
 > The Clear Creek forecast captures the distinct seasonality of discharge in Clear Creek. As with the Neuse River, the variability in discharge is not captured.
 The forecast captures the distinct seasonal cycle of discharge in Clear Creek, however, the variability in peak discharge is not captured.
+

@@ -51,14 +51,14 @@ Let's delineate the upstream watershed for the sampling and gage site: Neuse Riv
 ```{r}
 # Recall there are a lot of parameters measured at the site
 NeuseParams <- whatNWISdata(siteNumbers = "02089500")
-
+EnoParams <- whatNWISdata(siteNumbers = "02085070")
 # Extract latitude and longitude for the site
-NeuseCoords <- NeuseParams %>%
+EnoCoords <- EnoParams %>%
   select(site_no, dec_lat_va, dec_long_va) %>%
   distinct()
 
 # Define the gage site as the starting point
-start_point <- st_sfc(st_point(c(NeuseCoords$dec_long_va, NeuseCoords$dec_lat_va)), 
+start_point <- st_sfc(st_point(c(EnoCoords$dec_long_va, EnoCoords$dec_lat_va)), 
                       crs = 4269) # NAD83, commonly  used by US agencies
 start_comid <- discover_nhdplus_id(start_point)
 # start_point2 <- st_as_sf(data.frame(x = NeuseCoords$dec_long_va, y =  NeuseCoords$dec_lat_va), 

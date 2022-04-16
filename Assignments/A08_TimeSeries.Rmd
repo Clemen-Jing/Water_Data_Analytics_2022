@@ -111,7 +111,6 @@ Research question: can we predict discharge in Clear Creek moving into the futur
 
 ```{r}
 auto.arima(ClearCreek_ts, trace = TRUE)
-
 # create an object that defines the best fit model
 fit <- arima(ClearCreek_ts, c(1,0,0),seasonal = list(order = c(1,1,0), period = 12))
 # make a prediction into the future
